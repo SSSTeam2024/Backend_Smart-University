@@ -7,7 +7,8 @@ const departementSchema = new mongoose.Schema({
   volume_horaire:String,
   nom_chef_dep:String,
   signature:String,
-  salles: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Salle' }]
+  salles: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Salle' }],
+  sections: [{ type: mongoose.Schema.Types.ObjectId, ref: 'SectionClasse'}]
 
  
 },

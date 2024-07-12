@@ -30,6 +30,8 @@ const salleRoutes = require("./SalleRoutes/SalleRoutes");
 
 const classeRoutes = require("./ClasseRoutes/ClasseRoutes");
 
+const etudiantRoutes=require("./EtudiantRoutes/EtudiantRoutes")
+
 // personnel
 router.use('/etat-personnel',etatPersonnelRoutes);
 router.use('/poste-personnel',postePersonnelRoutes);
@@ -46,6 +48,7 @@ router.use('/specialite-enseignant',specialiteEnseignantRoutes);
 // etudiant
 router.use('/etat-etudiant',etatEtudiantRoutes);
 router.use('/type-inscription-etudiant',typeInscriptionEtudiantRoutes);
+router.use("/etudiant", etudiantRoutes);
 
 // departement
 router.use("/department", departmentRoutes);
@@ -65,5 +68,7 @@ router.use("/salle", salleRoutes);
 
 //Classe
 router.use("/classe", classeRoutes);
+
+
 
 module.exports = router;

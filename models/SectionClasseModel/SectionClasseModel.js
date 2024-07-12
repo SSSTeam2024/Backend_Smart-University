@@ -4,7 +4,9 @@ const sectionClasseSchema = new mongoose.Schema(
   {
     name_section_ar: String,
     name_section_fr: String,
-    abreviation:String
+    abreviation:String,
+    niveau_classe: [{type: mongoose.Schema.Types.ObjectId, ref: 'NiveauClasse' }],
+    departements: [{type: mongoose.Schema.Types.ObjectId, ref: 'Departement'}],
   },
   { timestamps: true }
 );

@@ -1,8 +1,26 @@
 const sectionClasseDao = require("../../dao/SectionClasseDao/SectionClasseDao");
+const niveauClasse = require ("../../models/NiveauClasseModel/NiveauClasseModel");
+const DepartementClasse = require ("../../models/DepartementModel/DepartementModel")
+
+// const registerSectionClasse = async (userData) => {
+ 
+//   return await sectionClasseDao.createSectionClasse(userData);
+// };
 
 const registerSectionClasse = async (userData) => {
- 
-  return await sectionClasseDao.createSectionClasse(userData);
+  try {
+    const sectionClasse = await sectionClasseDao.createSectionClasse(userData);
+    await Promise.all(userData.departments.map(async (departmentId) => {
+      await DepartementClasse.findByIdAndUpdate(departmentId, { $push: { sections: sections._id } });
+    }));
+
+    await sectionClasse.populate("departements");
+
+    return sectionClasse;
+  } catch (error) {
+    console.error("Error in registering section classe:", error);
+    throw error;
+  }
 };
 
 const updateSetionClasseDao = async (id, updateData) => {
@@ -19,8 +37,34 @@ const getSectionsClasseDao = async () => {
 };
 
 const deleteSectionClassetDao = async (id) => {
-  return await sectionClasseDao.deleteSectionClasse(id)
+  try {
+    console.log(`Attempting to delete section with ID: ${id}`);
+    const deletedSection = await sectionClasseDao.deleteSectionClasse(id);
+
+    if (!deletedSection) {
+      console.log(`Section with ID ${id} not found`);
+      throw new Error("Section not found");
+    }
+
+    console.log(`Section with ID ${id} deleted successfully`);
+    const updateResult = await niveauClasse.updateMany(
+      { sections: id },
+      { $pull: { sections: id } }
+    );
+
+    console.log("Update result:", updateResult);
+    if (updateResult.nModified === 0) {
+      console.warn(`No niveau classes were updated to remove the deleted section ID ${id}`);
+    }
+
+    return deletedSection;
+  } catch (error) {
+    console.error("Error deleting section and updating niveau classes:", error);
+    throw error;
+  }
 };
+
+
 
 
 
@@ -30,5 +74,6 @@ module.exports = {
     getSectionClasseDaoById,
     updateSetionClasseDao,
     registerSectionClasse,
+
 
 };

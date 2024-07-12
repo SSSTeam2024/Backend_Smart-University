@@ -2,10 +2,10 @@ const typeInscriptionEtudiantService = require("../../services/TypeInscriptionEt
 
 const addTypeInscriptionEtudiant = async (req, res) => {
   try {
-    const { value_type_inscription, type_ar, type_fr } = req.body;
+    const { value_type_inscription, type_ar, type_fr,files_type_inscription } = req.body;
 
     const typeInscriptionEtudiant = await typeInscriptionEtudiantService.registerTypeInscriptionEtudiantt({
-        value_type_inscription, type_ar, type_fr
+        value_type_inscription, type_ar, type_fr,files_type_inscription
     });
     res.json(typeInscriptionEtudiant);
   } catch (error) {
@@ -21,10 +21,10 @@ const addTypeInscriptionEtudiant = async (req, res) => {
 const updateTypeInscriptionEtudiantById = async (req, res) => {
   try {
     const typeInscriptionEtudianttId = req.params.id;
-    const { value_type_inscription, type_ar, type_fr } = req.body;
+    const { value_type_inscription, type_ar, type_fr, files_type_inscription } = req.body;
 
     const updatedTypeInscriptionEtudiant = await typeInscriptionEtudiantService.updateTypeInscriptionEtudiantDao(typeInscriptionEtudianttId, {
-        value_type_inscription, type_ar, type_fr
+        value_type_inscription, type_ar, type_fr, files_type_inscription
     });
 
     if (!updatedTypeInscriptionEtudiant) {

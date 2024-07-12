@@ -10,11 +10,11 @@ const createNiveauClasse= async (niveau) => {
 
 
 const getNiveauxClasse = async () => {
-  return await niveauClasse.find();
+  return await niveauClasse.find().populate("sections");
 };
 
 const updateNiveauClasse = async (id, updateData) => {
-  return await niveauClasse.findByIdAndUpdate(id, updateData, { new: true });
+  return await niveauClasse.findByIdAndUpdate(id, updateData, { new: true }).populate("sections");
 };
 
 const deleteNiveauClasse = async (id) => {
@@ -22,9 +22,20 @@ const deleteNiveauClasse = async (id) => {
 };
 
 const getNiveauClasseById = async (id) => {
-  return await niveauClasse.findById(id);
+  return await niveauClasse.findById(id).populate("sections");
 };
 
+// getSectionsByIdNiveau
+
+async function getSectionsByIdNiveau(niveauClasseId) {
+  try {
+    return await niveauClasse.findById(niveauClasseId).populate(
+      "sections"
+    );
+  } catch (error) {
+    throw error;
+  }
+}
 
 module.exports = {
     createNiveauClasse,
@@ -32,5 +43,6 @@ module.exports = {
     updateNiveauClasse,
     deleteNiveauClasse,
     getNiveauClasseById,
+    getSectionsByIdNiveau
 
 };

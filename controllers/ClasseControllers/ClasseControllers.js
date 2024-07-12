@@ -5,7 +5,6 @@ const Matiere = require ("../../models/MatiereModel/MatiereModel")
 const addClasse = async (req, res) => {
   try {
     const {
-      section_classe,
       niveau_classe,
       departement,
       nom_classe_ar,
@@ -13,7 +12,6 @@ const addClasse = async (req, res) => {
     } = req.body;
 
     const classeJson = await classeService.createClasse({
-      section_classe,
       niveau_classe,
       departement,
       nom_classe_ar,
@@ -25,11 +23,11 @@ const addClasse = async (req, res) => {
   }
 };
 
+
 const updateClasseById = async (req, res) => {
   try {
     const classeId = req.params.id;
     const {
-      section_classe,
       niveau_classe,
       departement,
       nom_classe_ar,
@@ -37,7 +35,6 @@ const updateClasseById = async (req, res) => {
     } = req.body;
 
     const updatedClasse = await classeService.getClasseById(classeId, {
-      section_classe,
       niveau_classe,
       departement,
       nom_classe_ar,
@@ -69,6 +66,8 @@ const getClasseById = async (req, res) => {
     res.status(500).send(error.message);
   }
 };
+
+
 const getAllClasses = async (req, res) => {
   try {
     const classes = await classeService.getClasses();
@@ -78,6 +77,8 @@ const getAllClasses = async (req, res) => {
     res.status(500).send(error.message);
   }
 };
+
+
 
 const deleteClasseById = async (req, res) => {
   try {
@@ -111,22 +112,17 @@ async function assignMatieresToClasseController(req, res, next) {
 }
 
 
-
-async function deleteAssignedMatiereFromClasse(req, res) {
+const deleteAssignedMatiereFromClasse = async (req, res) => {
   const { classeId, matiereId } = req.params;
 
   try {
-    // Call the DAO function to delete assigned matiere from classe
     const updatedClasse = await classeDao.deleteAssignedMatiereFromClasse(classeId, matiereId);
-
-    // Send the updated classe object as JSON response
     res.json(updatedClasse);
   } catch (error) {
-    // Handle any errors that occur during the deletion process
     console.error('Error deleting assigned matiere from classe:', error);
     res.status(500).json({ error: 'Server error' });
   }
-}
+};
 
 
 async function getAssignedMatieres(req, res) {

@@ -2,10 +2,10 @@ const niveauClasseService = require("../../services/NiveauClasseServices/NiveauC
 
 const addNiveauClasse = async (req, res) => {
   try {
-    const { abreviation, name_niveau_fr , name_niveau_ar } = req.body;
+    const { abreviation, name_niveau_fr , name_niveau_ar, sections } = req.body;
 
     const niveauClasse = await niveauClasseService.registerNiveauClasse({
-        abreviation, name_niveau_fr , name_niveau_ar
+        abreviation, name_niveau_fr , name_niveau_ar, sections
     });
     res.json(niveauClasse);
   } catch (error) {
@@ -16,10 +16,10 @@ const addNiveauClasse = async (req, res) => {
 const updateNiveauClasseById = async (req, res) => {
   try {
     const niveauClasseId = req.params.id;
-    const { abreviation, name_niveau_fr , name_niveau_ar } = req.body;
+    const { abreviation, name_niveau_fr , name_niveau_ar,sections } = req.body;
 
     const updatedNiveauClasse= await niveauClasseService.updateNiveauClasseDao(niveauClasseId, {
-        abreviation, name_niveau_fr , name_niveau_ar
+        abreviation, name_niveau_fr , name_niveau_ar,sections
     });
 
     if (!updatedNiveauClasse) {
@@ -61,7 +61,7 @@ const deleteNiveauClasseById = async (req, res) => {
   try {
     const niveauClasseId = req.params.id;
 
-    const deletedNiveauClasse = await niveauClasseService.deleteNiveauClassetDao(niveauClasseId);
+    const deletedNiveauClasse = await niveauClasseService.deleteNiveauClasse(niveauClasseId);
 
     if (!deletedNiveauClasse) {
       return res.status(404).send("Niveau Classe not found");
@@ -72,14 +72,25 @@ const deleteNiveauClasseById = async (req, res) => {
     res.status(500).send(error.message);
   }
 };
-// 
+
+async function getSectionsByIdNiveau(req, res) {
+  const { niveauClasseId } = req.params;
+
+  try {
+    const sections = await niveauClasseService.getSectionsByIdNiveau(niveauClasseId);
+    res.status(200).json(sections);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
 
 module.exports = {
     deleteNiveauClasseById,
     getAllNiveauxClasse,
     getNiveauClasseById,
     updateNiveauClasseById,
-    addNiveauClasse
+    addNiveauClasse,
+    getSectionsByIdNiveau
 
 
 };

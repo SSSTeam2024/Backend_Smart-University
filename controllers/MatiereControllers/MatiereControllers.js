@@ -47,6 +47,7 @@ const getMatiereById = async (req, res) => {
     res.status(500).send(error.message);
   }
 };
+
 const getAllMatieres = async (req, res) => {
   try {
     const matieres = await matiereService.getMatieresDao();

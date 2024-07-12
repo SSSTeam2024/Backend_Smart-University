@@ -3,17 +3,23 @@ const Classe = require("../../models/ClasseModels/ClasseModels");
 const ClasseModels = require("../../models/ClasseModels/ClasseModels");
 const Matiere = require("../../models/MatiereModel/MatiereModel");
 
-const createClasse = async (userData) => {
+const createClasse = async (classeData) => {
   try {
-    const createdClasse = await classeDao.createClasse(userData);
-    const populatedClasse = await ClasseModels.findById(createdClasse._id)
-      .populate("departement")
-      .populate("niveau_classe")
-      .populate("section_classe");
+    const createdClasse = await Classe.create(classeData);
+    const populatedClasse = await Classe.findById(createdClasse._id)
+      .populate({
+        path: 'niveau_classe',
+        populate: {
+          path: 'sections',
+          model: 'SectionClasse'
+        }
+      })
+      .populate('departement')
+      .populate('matieres');
 
     return populatedClasse;
   } catch (error) {
-    console.error("Error in classe service:", error);
+    console.error('Error creating classe:', error);
     throw error;
   }
 };
@@ -30,6 +36,8 @@ const getClasses = async () => {
   const result = await classeDao.getClasses();
   return result;
 };
+
+
 
 const deleteClasseById = async (id) => {
   try {

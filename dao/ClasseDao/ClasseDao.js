@@ -12,17 +12,25 @@ const createClasse = async (classe) => {
 };
 const getClasses = async () => {
   try {
-    return await classeModel
-      .find()
-      .populate("departement")
-      .populate("niveau_classe")
-      .populate("section_classe")
-      .populate("matieres");
+    const classes = await Classe.find()
+      .populate({
+        path: 'niveau_classe',
+        populate: {
+          path: 'sections',
+          model: 'SectionClasse'
+        }
+      })
+      .populate('departement')
+      .populate('matieres');
+
+    return classes;
   } catch (error) {
-    console.error("Error fetching classes:", error);
+    console.error('Error fetching classes:', error);
     throw error;
   }
 };
+
+
 
 const updateClasse = async (id, updateData) => {
   try {
@@ -30,7 +38,6 @@ const updateClasse = async (id, updateData) => {
       .findByIdAndUpdate(id, updateData, { new: true })
       .populate("departement")
       .populate("niveau_classe")
-      .populate("section_classe")
       .populate("matieres");
   } catch (error) {
     console.error("Error updating classe:", error);
@@ -53,7 +60,6 @@ const getClasseById = async (id) => {
       .findById(id)
       .populate("departement")
       .populate("niveau_classe")
-      .populate("section_classe")
       .populate("matieres");
   } catch (error) {
     console.error("Error fetching classe by ID:", error);
@@ -86,28 +92,32 @@ async function assignMatieresToClasse(classeId, matiereIds) {
   }
 }
 
-async function deleteAssignedMatiereFromClasse(classeId, matiereId) {
+const deleteAssignedMatiereFromClasse = async (classeId, matiereId) => {
   try {
     const classe = await Classe.findById(classeId);
     if (!classe) {
       throw new Error("Classe not found");
     }
-    classe.matieres = classe.matieres.filter((m) => m.toString() !== matiereId);
+
+    // Remove matiereId from classe.matieres array ensuring uniqueness
+    const updatedMatieres = new Set(classe.matieres.map(m => m.toString())); // Using a set for uniqueness
+    updatedMatieres.delete(matiereId);
+    classe.matieres = Array.from(updatedMatieres);
+
     await classe.save();
+
+    // Update corresponding matiere document
     const matiere = await MatiereModel.findById(matiereId);
     if (matiere) {
-      matiere.classes = matiere.classes.filter(
-        (c) => c.toString() !== classeId
-      );
+      matiere.classes = matiere.classes.filter(c => c.toString() !== classeId);
       await matiere.save();
     }
-    return classe;
+
+    return classe; // Return updated classe object
   } catch (error) {
-    throw new Error(
-      `Error deleting assigned matiere from classe: ${error.message}`
-    );
+    throw new Error(`Error deleting assigned matiere from classe: ${error.message}`);
   }
-}
+};
 
 
 async function getAssignedMatieres(classeId) {
