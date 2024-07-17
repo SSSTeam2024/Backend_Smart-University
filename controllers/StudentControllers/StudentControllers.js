@@ -14,7 +14,7 @@ const addStudent = async (req, res) => {
       FichePaiementFileBase64String, FichePaiementFileExtension, state, dependence,
       code_postale, adress_ar, adress_fr, num_phone, email, nom_pere, job_pere, nom_mere,
       num_phone_tuteur, moyen, session, filiere, niveau_scolaire, annee_scolaire,
-      type_inscription, etat_compte, groupe_classe
+      type_inscription, etat_compte, groupe_classe, PhotoProfilFileExtension, PhotoProfilFileBase64String
     } = req.body;
 
     const face1CINPath = "files/etudiantFiles/Face1CIN/";
@@ -25,6 +25,11 @@ const addStudent = async (req, res) => {
 
     const fichePaiementPath = "files/etudiantFiles/FichePaiement/";
     const fichePaiementFilePath = path.join(fichePaiementPath, globalFunctions.generateUniqueFilename(FichePaiementFileExtension, "fiche_paiement"));
+
+
+    const PhotoProfilPath = "files/etudiantFiles/PhotoProfil/";
+    const PhotoProfilFilePath = path.join(PhotoProfilPath, globalFunctions.generateUniqueFilename(PhotoProfilFileExtension, "photo_profil"));
+
 
     const typeInscription = await TypeInscriptionEtudiant.findById(type_inscription);
     if (!typeInscription) {
@@ -52,6 +57,12 @@ const addStudent = async (req, res) => {
         name: fichePaiementFilePath,
         path: fichePaiementPath,
       },
+      {
+        base64String: PhotoProfilFileBase64String,
+        extension: PhotoProfilFileExtension,
+        name: path.basename(PhotoProfilFilePath),
+        path: PhotoProfilPath,
+      }
     ];
 
     for (let i = 0; i < filesTypeInscription.length; i++) {
@@ -80,7 +91,7 @@ const addStudent = async (req, res) => {
       nationalite, sexe, etat_civil, num_CIN, state, dependence, code_postale, adress_ar, adress_fr,
       num_phone, email, nom_pere, job_pere, nom_mere, num_phone_tuteur, moyen, session, filiere,
       niveau_scolaire, annee_scolaire, type_inscription, etat_compte, groupe_classe,
-      face_1_CIN: face1CINFilePath, face_2_CIN: face2CINFilePath, fiche_paiement: fichePaiementFilePath,
+      face_1_CIN: face1CINFilePath, face_2_CIN: face2CINFilePath, fiche_paiement: fichePaiementFilePath, photo_profil: path.basename(PhotoProfilFilePath),
       files: documents.map(doc => doc.name),
     }, documents);
 

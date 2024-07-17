@@ -32,23 +32,34 @@ const classeRoutes = require("./ClasseRoutes/ClasseRoutes");
 
 const etudiantRoutes=require("./EtudiantRoutes/EtudiantRoutes")
 
-// personnel
+const enseignantRoutes=require("./EnseignantRoutes/EnseignantRoutes")
+
+const personnelRoutes=require("./PersonnelRoutes/PersonnelRoutes")
+
+
+// parametre compte personnel
 router.use('/etat-personnel',etatPersonnelRoutes);
 router.use('/poste-personnel',postePersonnelRoutes);
 router.use('/grade-personnel',gradePersonnelRoutes);
 router.use('/categorie-personnel',categoriePersonnelRoutes);
 router.use('/service-personnel',servicePersonnelRoutes);
 router.use("/user", userRoutes);
-// enseignant
+// parametre compte enseignant
 router.use('/etat-enseignant',etatEnseignantRoutes);
 router.use('/poste-enseignant',posteEnseignantRoutes);
 router.use('/grade-enseignant',gradeEnseignantRoutes);
 router.use('/specialite-enseignant',specialiteEnseignantRoutes);
 
-// etudiant
+// parametre compte etudiant
 router.use('/etat-etudiant',etatEtudiantRoutes);
 router.use('/type-inscription-etudiant',typeInscriptionEtudiantRoutes);
 router.use("/etudiant", etudiantRoutes);
+
+//enseignant
+router.use('/enseignant',enseignantRoutes);
+// personnel 
+router.use('/personnel',personnelRoutes);
+
 
 // departement
 router.use("/department", departmentRoutes);

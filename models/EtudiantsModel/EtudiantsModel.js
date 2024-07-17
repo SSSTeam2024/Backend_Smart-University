@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const etudiantSchema = new mongoose.Schema({
   nom_fr: String,
   nom_ar: String,
+  photo_profil:String,
   prenom_fr: String,
   prenom_ar: String,
   lieu_naissance_fr: String,

@@ -1,18 +1,17 @@
-const etudiantDao = require("../../dao/StudentDao/StudentDao");
-const fs = require('fs');
+const enseignantDao = require("../../dao/EnseignantDao/EnseignantDao");
+const fs = require("fs");
 const path = require('path');
-
-const registerEtudiant = async (userData, documents) => {
+const registerEnseignantDao = async (userData, documents) => {
   try {
     const saveResult = await saveDocumentToServer(documents);
     if (saveResult) {
-      const newEtudiant = await etudiantDao.createEudiant(userData);
-      return newEtudiant;
+      const newEnseignant = await enseignantDao.createEnseignant(userData);
+      return newEnseignant;
     } else {
       throw new Error('Failed to save documents.');
     }
   } catch (error) {
-    console.error('Error registering etudiant:', error);
+    console.error('Error registering enseignant:', error);
     throw error;
   }
 };
@@ -39,12 +38,27 @@ async function saveAdministrativeFile(base64String, fileName, filePath) {
   console.log('File saved successfully at:', fullFilePath);
 }
 
-const getEtudiants = async () => {
-  const result = await etudiantDao.getEtudiants();
+
+const getEnseignatsDao = async () => {
+  const result = await enseignantDao.getEnseignants();
   return result;
 };
 
+const deleteEnseignantDao = async (id) => {
+  return await enseignantDao.deleteEnseignant(id);
+};
+const updateEnseignantDao = async (id, updateData) => {
+  return await enseignantDao.updateEnseignant(id, updateData);
+};
+
+const getEnseignantDaoById = async (id) => {
+  return await enseignantDao.getEnseignantById(id);
+};
+
 module.exports = {
-    getEtudiants,
-    registerEtudiant
+  registerEnseignantDao,
+  getEnseignatsDao,
+  deleteEnseignantDao,
+  updateEnseignantDao,
+  getEnseignantDaoById,
 };
