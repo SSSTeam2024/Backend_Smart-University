@@ -36,8 +36,9 @@ const addStudent = async (req, res) => {
       return res.status(404).json({ error: 'Type inscription not found' });
     }
 
+    console.log("typeInscription", typeInscription)
     const filesTypeInscription = typeInscription.files_type_inscription;
-
+    console.log("filesTypeInscription", filesTypeInscription)
     let documents = [
       {
         base64String: Face1CINFileBase64String,
@@ -94,7 +95,7 @@ const addStudent = async (req, res) => {
       face_1_CIN: face1CINFilePath, face_2_CIN: face2CINFilePath, fiche_paiement: fichePaiementFilePath, photo_profil: path.basename(PhotoProfilFilePath),
       files: documents.map(doc => doc.name),
     }, documents);
-
+console.log(documents);
     const populatedEtudiant = await Etudiant.findById(etudiant._id)
       .populate('etat_compte')
       .populate('type_inscription')
