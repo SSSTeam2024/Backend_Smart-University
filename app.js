@@ -17,7 +17,7 @@ app.use(express.json({limit: "50mb"}));
 app.use(express.urlencoded({limit: "50mb", extended: true, parameterLimit:50000}));
 const port = 5000;
 
-mongoose.connect('mongodb+srv://smartuniversity3s:2V0nlgVluOQX6Dg0@cluster0.e3s3xpp.mongodb.net/Smart_University', { });
+mongoose.connect('mongodb+srv://smartuniversity3s:2V0nlgVluOQX6Dg0@cluster0.e3s3xpp.mongodb.net/Smart_University'); // mongodb+srv://smartuniversity3s:2V0nlgVluOQX6Dg0@cluster0.e3s3xpp.mongodb.net/Smart_University  mongodb://localhost:27017/Smart_University
 
 
 

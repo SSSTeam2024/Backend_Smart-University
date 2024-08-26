@@ -1,5 +1,6 @@
 const salleDao = require("../../dao/SalleDao/SalleDao");
 const DepartementModel = require("../../models/DepartementModel/DepartementModel");
+const SalleDisponibiliteService = require("../../services/SalleDisponibiliteServices/SalleDisponibiliteServices");
 
 const createSalle = async (userData) => {
   try {
@@ -8,6 +9,7 @@ const createSalle = async (userData) => {
       userData.departement,
       { $push: { salles: salle._id } }
     );
+    await SalleDisponibiliteService.createSalleDisponibilite(salle._id);
     return await salle.populate('departement')
   } catch (error) {
     console.error("Error in salle service:", error);
@@ -29,6 +31,7 @@ const getSalles= async () => {
 };
 
 const deleteSalleById = async (id) => {
+  await SalleDisponibiliteService.deleteDisponibilityBySalleId(id);
   return await salleDao.deleteSalle(id);
 };
 

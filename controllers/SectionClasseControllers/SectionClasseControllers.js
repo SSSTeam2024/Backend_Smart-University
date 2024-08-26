@@ -2,10 +2,10 @@ const sectionClasseService = require("../../services/SectionClasseServices/Secti
 
 const addSectionClasse = async (req, res) => {
   try {
-    const { name_section_ar, name_section_fr, abreviation } = req.body;
+    const { name_section_ar, name_section_fr, abreviation, departements } = req.body;
 
     const sectionClasse = await sectionClasseService.registerSectionClasse({
-        name_section_ar, name_section_fr, abreviation 
+        name_section_ar, name_section_fr, abreviation ,departements
     });
     res.json(sectionClasse);
   } catch (error) {
@@ -16,12 +16,12 @@ const addSectionClasse = async (req, res) => {
 const updateSectionClasseById = async (req, res) => {
   try {
     const sectionClasseId = req.params.id;
-    const { name_section_ar, name_section_fr, abreviation } = req.body;
+    const { name_section_ar, name_section_fr, abreviation ,departements} = req.body;
 
     const updatedSectionClasse = await sectionClasseService.updateSetionClasseDao(
         sectionClasseId,
       {
-        name_section_ar, name_section_fr, abreviation 
+        name_section_ar, name_section_fr, abreviation ,departements
       }
     );
 

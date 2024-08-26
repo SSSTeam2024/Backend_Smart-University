@@ -10,6 +10,26 @@ const createClasse = async (classe) => {
     throw error;
   }
 };
+// const getClasses = async () => {
+//   try {
+//     const classes = await Classe.find()
+//       .populate({
+//         path: "niveau_classe",
+//         populate: {
+//           path: "sections",
+//           model: "SectionClasse",
+//         },
+//       })
+//       .populate("departement")
+//       .populate("matieres");
+
+//     return classes;
+//   } catch (error) {
+//     console.error("Error fetching classes:", error);
+//     throw error;
+//   }
+// };
+
 const getClasses = async () => {
   try {
     const classes = await Classe.find()
@@ -17,7 +37,15 @@ const getClasses = async () => {
         path: 'niveau_classe',
         populate: {
           path: 'sections',
-          model: 'SectionClasse'
+          model: 'SectionClasse',
+          populate: {
+            path: 'departements',
+            model: 'Departement',
+            populate: {
+              path: 'sections',
+              model: 'SectionClasse'
+            }
+          }
         }
       })
       .populate('departement')
@@ -75,10 +103,23 @@ async function assignMatieresToClasse(classeId, matiereIds) {
       throw new Error("Classe not found");
     }
 
-    const matieres = await MatiereModel.find({ _id: { $in: matiereIds } });
+    const existingMatieres = new Set(
+      classe.matieres.map((matiere) => matiere.toString())
+    );
+    const uniqueMatiereIds = matiereIds.filter(
+      (id) => !existingMatieres.has(id.toString())
+    );
 
-    classe.matieres.push(...matiereIds);
+    if (uniqueMatiereIds.length === 0) {
+      return classe;
+    }
+
+    classe.matieres.push(...uniqueMatiereIds);
     await classe.save();
+
+    const matieres = await MatiereModel.find({
+      _id: { $in: uniqueMatiereIds },
+    });
     for (let matiere of matieres) {
       if (!matiere.classes.includes(classeId)) {
         matiere.classes.push(classeId);
@@ -100,7 +141,7 @@ const deleteAssignedMatiereFromClasse = async (classeId, matiereId) => {
     }
 
     // Remove matiereId from classe.matieres array ensuring uniqueness
-    const updatedMatieres = new Set(classe.matieres.map(m => m.toString())); // Using a set for uniqueness
+    const updatedMatieres = new Set(classe.matieres.map((m) => m.toString())); // Using a set for uniqueness
     updatedMatieres.delete(matiereId);
     classe.matieres = Array.from(updatedMatieres);
 
@@ -109,20 +150,23 @@ const deleteAssignedMatiereFromClasse = async (classeId, matiereId) => {
     // Update corresponding matiere document
     const matiere = await MatiereModel.findById(matiereId);
     if (matiere) {
-      matiere.classes = matiere.classes.filter(c => c.toString() !== classeId);
+      matiere.classes = matiere.classes.filter(
+        (c) => c.toString() !== classeId
+      );
       await matiere.save();
     }
 
     return classe; // Return updated classe object
   } catch (error) {
-    throw new Error(`Error deleting assigned matiere from classe: ${error.message}`);
+    throw new Error(
+      `Error deleting assigned matiere from classe: ${error.message}`
+    );
   }
 };
 
-
 async function getAssignedMatieres(classeId) {
   try {
-    const classe = await Classe.findById(classeId).populate('matieres');
+    const classe = await Classe.findById(classeId).populate("matieres");
     if (!classe) {
       throw new Error("Classe not found");
     }
@@ -132,8 +176,6 @@ async function getAssignedMatieres(classeId) {
   }
 }
 
-
-
 module.exports = {
   createClasse,
   getClasses,
@@ -142,5 +184,5 @@ module.exports = {
   getClasseById,
   assignMatieresToClasse,
   deleteAssignedMatiereFromClasse,
-  getAssignedMatieres
+  getAssignedMatieres,
 };

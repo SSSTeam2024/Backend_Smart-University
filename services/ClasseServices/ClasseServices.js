@@ -1,6 +1,5 @@
 const classeDao = require("../../dao/ClasseDao/ClasseDao");
 const Classe = require("../../models/ClasseModels/ClasseModels");
-const ClasseModels = require("../../models/ClasseModels/ClasseModels");
 const Matiere = require("../../models/MatiereModel/MatiereModel");
 
 const createClasse = async (classeData) => {
@@ -8,18 +7,18 @@ const createClasse = async (classeData) => {
     const createdClasse = await Classe.create(classeData);
     const populatedClasse = await Classe.findById(createdClasse._id)
       .populate({
-        path: 'niveau_classe',
+        path: "niveau_classe",
         populate: {
-          path: 'sections',
-          model: 'SectionClasse'
-        }
+          path: "sections",
+          model: "SectionClasse",
+        },
       })
-      .populate('departement')
-      .populate('matieres');
+      .populate("departement")
+      .populate("matieres");
 
     return populatedClasse;
   } catch (error) {
-    console.error('Error creating classe:', error);
+    console.error("Error creating classe:", error);
     throw error;
   }
 };
@@ -36,8 +35,6 @@ const getClasses = async () => {
   const result = await classeDao.getClasses();
   return result;
 };
-
-
 
 const deleteClasseById = async (id) => {
   try {
@@ -61,7 +58,9 @@ const deleteClasseById = async (id) => {
 
     console.log("Update result:", updateResult);
     if (updateResult.modifiedCount === 0) {
-      console.warn(`No matieres were updated to remove the deleted classe ID ${id}`);
+      console.warn(
+        `No matieres were updated to remove the deleted classe ID ${id}`
+      );
     }
 
     return deletedClasse;
@@ -71,20 +70,21 @@ const deleteClasseById = async (id) => {
   }
 };
 
-
-
-
 async function assignMatieresToClasse(classeId, matiereIds) {
   try {
-    const updatedClasse = await classeDao.assignMatieresToClasse(classeId, matiereIds);
-    const populatedClasse = await Classe.findById(classeId).populate('matieres').exec();
+    const updatedClasse = await classeDao.assignMatieresToClasse(
+      classeId,
+      matiereIds
+    );
+    const populatedClasse = await Classe.findById(classeId)
+      .populate("matieres")
+      .exec();
 
     return populatedClasse;
   } catch (error) {
     throw new Error(`Error assigning matieres to classe: ${error.message}`);
   }
 }
-
 
 async function getAssignedMatieres(classeId) {
   try {
@@ -101,6 +101,5 @@ module.exports = {
   getClasses,
   deleteClasseById,
   assignMatieresToClasse,
-  getAssignedMatieres
-
+  getAssignedMatieres,
 };

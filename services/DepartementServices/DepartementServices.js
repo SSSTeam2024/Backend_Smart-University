@@ -1,5 +1,6 @@
 const departmentDao = require("../../dao/DepartementDao/DepartementDao");
 const fs = require('fs'); 
+const classeSections = require('../../models/SectionClasseModel/SectionClasseModel');
 
 const registerDepartement = async (userData, documents) => {
   try {
@@ -85,15 +86,41 @@ const getDepartementstDao = async () => {
   }
 };
 
+// const deleteDepartementDao = async (id) => {
+//   try {
+//     return await departmentDao.deleteDepartement(id);
+//   } catch (error) {
+//     console.error("Error deleting department:", error);
+//     throw error;
+//   }
+// };
 const deleteDepartementDao = async (id) => {
   try {
-    return await departmentDao.deleteDepartement(id);
+    console.log(`Attempting to delete department with ID: ${id}`);
+    const deletedDepartment = await departmentDao.deleteDepartement(id);
+
+    if (!deletedDepartment) {
+      console.log(`Department with ID ${id} not found`);
+      throw new Error("Department not found");
+    }
+
+    console.log(`Department with ID ${id} deleted successfully`);
+    const updateResult = await classeSections.updateMany(
+      { departements: id },
+      { $pull: { departements: id } }
+    );
+
+    console.log("Update result:", updateResult);
+    if (updateResult.nModified === 0) {
+      console.warn(`No Section classes were updated to remove the deleted department ID ${id}`);
+    }
+
+    return deletedDepartment;
   } catch (error) {
-    console.error("Error deleting department:", error);
+    console.error("Error deleting departement and updating section classe:", error);
     throw error;
   }
 };
-
 
 
 module.exports = {

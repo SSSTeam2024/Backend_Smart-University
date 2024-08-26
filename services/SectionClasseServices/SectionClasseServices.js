@@ -1,7 +1,7 @@
 const sectionClasseDao = require("../../dao/SectionClasseDao/SectionClasseDao");
 const niveauClasse = require ("../../models/NiveauClasseModel/NiveauClasseModel");
 const DepartementClasse = require ("../../models/DepartementModel/DepartementModel")
-
+const SectionClasse =require ("../../models/SectionClasseModel/SectionClasseModel")
 // const registerSectionClasse = async (userData) => {
  
 //   return await sectionClasseDao.createSectionClasse(userData);
@@ -10,12 +10,8 @@ const DepartementClasse = require ("../../models/DepartementModel/DepartementMod
 const registerSectionClasse = async (userData) => {
   try {
     const sectionClasse = await sectionClasseDao.createSectionClasse(userData);
-    await Promise.all(userData.departments.map(async (departmentId) => {
-      await DepartementClasse.findByIdAndUpdate(departmentId, { $push: { sections: sections._id } });
-    }));
-
-    await sectionClasse.populate("departements");
-
+    await sectionClasseDao.updateDepartmentsWithSection(sectionClasse._id, userData.departements);
+    await sectionClasse.populate('departements');
     return sectionClasse;
   } catch (error) {
     console.error("Error in registering section classe:", error);
@@ -23,10 +19,27 @@ const registerSectionClasse = async (userData) => {
   }
 };
 
-const updateSetionClasseDao = async (id, updateData) => {
-  return await sectionClasseDao.updateSectionClasse(id, updateData);
-};
+const updateSetionClasseDao = async (sectionClasseId, updateData) => {
+  try {
+    const updatedSectionClasse = await SectionClasse.findByIdAndUpdate(sectionClasseId, updateData, { new: true });
+    
+    // Clear old section references from departments
+    const oldSection = await SectionClasse.findById(sectionClasseId);
+    if (oldSection) {
+      await Promise.all(oldSection.departements.map(async (departmentId) => {
+        await DepartementClasse.findByIdAndUpdate(departmentId, { $pull: { sections: sectionClasseId } });
+      }));
+    }
+    
+    // Add new section references to departments
+    await sectionClasseDao.updateDepartmentsWithSection(sectionClasseId, updateData.departements);
 
+    return updatedSectionClasse;
+  } catch (error) {
+    console.error("Error in updating section classe:", error);
+    throw error;
+  }
+};
 const getSectionClasseDaoById = async (id) => {
   return await sectionClasseDao.getSectionClasseById(id)
 };

@@ -10,7 +10,7 @@ const createDepartement = async (departement) => {
 };
 const getDepartements = async () => {
   try {
-    return await departementModel.find().populate('salles');
+    return await departementModel.find().populate('salles').populate("sections");
   } catch (error) {
     console.error("Error fetching departments:", error);
     throw error;
@@ -37,7 +37,7 @@ const deleteDepartement = async (id) => {
 
 const getDepartementById = async (id) => {
   try {
-    return await departementModel.findById(id).populate('salles');
+    return await departementModel.findById(id).populate('salles').populate("sections");
   } catch (error) {
     console.error("Error fetching department by ID:", error);
     throw error;

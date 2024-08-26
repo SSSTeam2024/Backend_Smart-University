@@ -36,6 +36,20 @@ const enseignantRoutes=require("./EnseignantRoutes/EnseignantRoutes")
 
 const personnelRoutes=require("./PersonnelRoutes/PersonnelRoutes")
 
+const ficheVoeuxRoutes=require("./FicheVoeuxRoutes/FicheVoeuxRoutes")
+
+const seanceRoutes=require("./SeanceRoutes/SeanceRoutes")
+
+const disponibiliteSalleRoutes=require("./DisponibiliteSalleRoutes/DisponibiliteSalleRoutes")
+
+//fiche voeux
+router.use('/fiche-voeux',ficheVoeuxRoutes);
+
+//Seance
+router.use('/seance',seanceRoutes);
+
+//disponibilite
+router.use('/disponibilite-salle',disponibiliteSalleRoutes);
 
 // parametre compte personnel
 router.use('/etat-personnel',etatPersonnelRoutes);

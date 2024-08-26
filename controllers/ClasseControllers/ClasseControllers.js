@@ -1,15 +1,10 @@
 const classeService = require("../../services/ClasseServices/ClasseServices");
-const classeDao= require ("../../dao/ClasseDao/ClasseDao")
-const Matiere = require ("../../models/MatiereModel/MatiereModel")
+const classeDao = require("../../dao/ClasseDao/ClasseDao");
 
 const addClasse = async (req, res) => {
   try {
-    const {
-      niveau_classe,
-      departement,
-      nom_classe_ar,
-      nom_classe_fr,
-    } = req.body;
+    const { niveau_classe, departement, nom_classe_ar, nom_classe_fr } =
+      req.body;
 
     const classeJson = await classeService.createClasse({
       niveau_classe,
@@ -23,16 +18,11 @@ const addClasse = async (req, res) => {
   }
 };
 
-
 const updateClasseById = async (req, res) => {
   try {
     const classeId = req.params.id;
-    const {
-      niveau_classe,
-      departement,
-      nom_classe_ar,
-      nom_classe_fr,
-    } = req.body;
+    const { niveau_classe, departement, nom_classe_ar, nom_classe_fr } =
+      req.body;
 
     const updatedClasse = await classeService.getClasseById(classeId, {
       niveau_classe,
@@ -67,7 +57,6 @@ const getClasseById = async (req, res) => {
   }
 };
 
-
 const getAllClasses = async (req, res) => {
   try {
     const classes = await classeService.getClasses();
@@ -77,8 +66,6 @@ const getAllClasses = async (req, res) => {
     res.status(500).send(error.message);
   }
 };
-
-
 
 const deleteClasseById = async (req, res) => {
   try {
@@ -91,7 +78,9 @@ const deleteClasseById = async (req, res) => {
       return res.status(404).send("Classe not found");
     }
 
-    res.status(200).json({ message: "Classe deleted successfully", data: deletedClasse });
+    res
+      .status(200)
+      .json({ message: "Classe deleted successfully", data: deletedClasse });
   } catch (error) {
     console.error("Error in deleteClasseById controller:", error);
     res.status(500).send(error.message);
@@ -104,26 +93,30 @@ async function assignMatieresToClasseController(req, res, next) {
   const matiereIds = req.body.matiereIds;
 
   try {
-    const updatedClasse = await classeService.assignMatieresToClasse(classeId, matiereIds);
+    const updatedClasse = await classeService.assignMatieresToClasse(
+      classeId,
+      matiereIds
+    );
     res.status(200).json(updatedClasse);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 }
 
-
 const deleteAssignedMatiereFromClasse = async (req, res) => {
   const { classeId, matiereId } = req.params;
 
   try {
-    const updatedClasse = await classeDao.deleteAssignedMatiereFromClasse(classeId, matiereId);
+    const updatedClasse = await classeDao.deleteAssignedMatiereFromClasse(
+      classeId,
+      matiereId
+    );
     res.json(updatedClasse);
   } catch (error) {
-    console.error('Error deleting assigned matiere from classe:', error);
-    res.status(500).json({ error: 'Server error' });
+    console.error("Error deleting assigned matiere from classe:", error);
+    res.status(500).json({ error: "Server error" });
   }
 };
-
 
 async function getAssignedMatieres(req, res) {
   const { classeId } = req.params;
@@ -132,8 +125,8 @@ async function getAssignedMatieres(req, res) {
     const matieres = await classeService.getAssignedMatieres(classeId);
     res.json(matieres);
   } catch (error) {
-    console.error('Error fetching assigned matieres:', error);
-    res.status(500).json({ error: 'Server error' });
+    console.error("Error fetching assigned matieres:", error);
+    res.status(500).json({ error: "Server error" });
   }
 }
 
@@ -145,5 +138,5 @@ module.exports = {
   deleteClasseById,
   assignMatieresToClasseController,
   deleteAssignedMatiereFromClasse,
-  getAssignedMatieres
+  getAssignedMatieres,
 };

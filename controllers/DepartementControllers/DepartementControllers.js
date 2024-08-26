@@ -11,6 +11,7 @@ const addDepartement = async (req, res) => {
       nom_chef_dep,
       SignatureFileBase64String,
       SignatureFileExtension,
+      sections
     } = req.body;
 
     const signaturePath = "files/departementFiles/";
@@ -35,6 +36,7 @@ const addDepartement = async (req, res) => {
         volume_horaire,
         nom_chef_dep,
         signature,
+        sections
       },
       documents
     );
@@ -53,6 +55,7 @@ const updateDepartementById = async (req, res) => {
       volume_horaire,
       nom_chef_dep,
       SignatureFileBase64String,
+      sections,
       SignatureFileExtension } = req.body;
       
       const signaturePath = "files/departementFiles/";
@@ -78,6 +81,7 @@ const updateDepartementById = async (req, res) => {
         volume_horaire,
         nom_chef_dep,
         signature,
+        sections
       },documents
     );
 
@@ -121,6 +125,7 @@ const getAllDeaprtements = async (req, res) => {
 const deleteDepartementById = async (req, res) => {
   try {
     const departmentId = req.params.id;
+    console.log(`Received request to delete department with ID: ${departmentId}`);
 
     const deletedDepartement = await departementService.deleteDepartementDao(
       departmentId
@@ -129,9 +134,9 @@ const deleteDepartementById = async (req, res) => {
     if (!deletedDepartement) {
       return res.status(404).send("Departement not found");
     }
-    res.sendStatus(200);
+    res.status(200).json({ message: "Department deleted successfully", data: deletedDepartement });
   } catch (error) {
-    console.error(error);
+    console.error("Error in deleteDepartementById controller:", error);
     res.status(500).send(error.message);
   }
 };

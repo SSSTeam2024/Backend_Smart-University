@@ -1,7 +1,7 @@
 const personnelService = require("../../services/PersonnelServices/PersonnelServices");
 const Personnel = require("../../models/PersonnelModel/PersonnelModel");
 const globalFunctions = require("../../utils/globalFunctions");
-const path = require('path');
+const path = require("path");
 const addPersonnel = async (req, res) => {
   try {
     const {
@@ -40,10 +40,16 @@ const addPersonnel = async (req, res) => {
       job_conjoint,
       nombre_fils,
       PhotoProfilFileExtension,
-      PhotoProfilFileBase64String
+      PhotoProfilFileBase64String,
     } = req.body;
     const PhotoProfilPath = "files/personnelFiles/PhotoProfil/";
-    const PhotoProfilFilePath = path.join(PhotoProfilPath, globalFunctions.generateUniqueFilename(PhotoProfilFileExtension, "photo_profil"));
+    const PhotoProfilFilePath = path.join(
+      PhotoProfilPath,
+      globalFunctions.generateUniqueFilename(
+        PhotoProfilFileExtension,
+        "photo_profil"
+      )
+    );
 
     let documents = [
       {
@@ -51,45 +57,48 @@ const addPersonnel = async (req, res) => {
         extension: PhotoProfilFileExtension,
         name: path.basename(PhotoProfilFilePath),
         path: PhotoProfilPath,
-      }
+      },
     ];
-    const personnel = await personnelService.registerPersonnelDao({
-      nom_fr,
-      nom_ar,
-      prenom_fr,
-      prenom_ar,
-      lieu_naissance_fr,
-      lieu_naissance_ar,
-      date_naissance,
-      nationalite,
-      etat_civil,
-      sexe,
-      etat_compte,
-      poste,
-      grade,
-      specilaite,
-      date_designation,
-      date_affectation,
-      compte_courant,
-      identifinat_unique,
-      num_cin,
-      date_delivrance,
-      categorie,
-      service,
-      state,
-      dependence,
-      code_postale,
-      departements,
-      adress_ar,
-      adress_fr,
-      num_phone1,
-      num_phone2,
-      email,
-      nom_conjoint,
-      job_conjoint,
-      nombre_fils,
-      photo_profil: path.basename(PhotoProfilFilePath)
-    },documents);
+    const personnel = await personnelService.registerPersonnelDao(
+      {
+        nom_fr,
+        nom_ar,
+        prenom_fr,
+        prenom_ar,
+        lieu_naissance_fr,
+        lieu_naissance_ar,
+        date_naissance,
+        nationalite,
+        etat_civil,
+        sexe,
+        etat_compte,
+        poste,
+        grade,
+        specilaite,
+        date_designation,
+        date_affectation,
+        compte_courant,
+        identifinat_unique,
+        num_cin,
+        date_delivrance,
+        categorie,
+        service,
+        state,
+        dependence,
+        code_postale,
+        departements,
+        adress_ar,
+        adress_fr,
+        num_phone1,
+        num_phone2,
+        email,
+        nom_conjoint,
+        job_conjoint,
+        nombre_fils,
+        photo_profil: path.basename(PhotoProfilFilePath),
+      },
+      documents
+    );
 
     const populatedPersonnel = await Personnel.findById(personnel._id)
       .populate("etat_compte")
@@ -142,7 +151,6 @@ const updatePersonnelById = async (req, res) => {
       date_delivrance,
       categorie,
       service,
-
       state,
       dependence,
       code_postale,
@@ -182,7 +190,6 @@ const updatePersonnelById = async (req, res) => {
         date_delivrance,
         categorie,
         service,
-
         state,
         dependence,
         code_postale,

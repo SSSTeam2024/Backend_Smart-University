@@ -1,6 +1,6 @@
 const NiveauClasseModel = require("../../models/NiveauClasseModel/NiveauClasseModel");
 const sectionClasse = require("../../models/SectionClasseModel/SectionClasseModel");
-
+const DepartementClasse =require("../../models/DepartementModel/DepartementModel");
 const createSectionClasse = async (section) => {
   try {
     return await sectionClasse.create(section);
@@ -28,6 +28,15 @@ const updateSectionClasse = async (id, updateData) => {
   }
 };
 
+const updateDepartmentsWithSection = async (sectionId, departmentIds) => {
+  try {
+    await Promise.all(departmentIds.map(async (departmentId) => {
+      await DepartementClasse.findByIdAndUpdate(departmentId, { $push: { sections: sectionId } });
+    }));
+  } catch (error) {
+    throw error;
+  }
+};
 const deleteSectionClasse = async (id) => {
   return await sectionClasse.findByIdAndDelete(id);
 };
@@ -48,5 +57,6 @@ module.exports = {
   updateSectionClasse,
   deleteSectionClasse,
   getSectionClasseById,
+  updateDepartmentsWithSection
 
 };
