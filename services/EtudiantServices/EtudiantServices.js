@@ -57,9 +57,28 @@ const deleteEtudiant = async (id) => {
 const updateEtudiant = async (id, updateData) => {
   return await etudiantDao.updateEtudiant(id, updateData);
 };
+
+const getEtudiantById = async (id) => {
+  return await etudiantDao.getStudentById(id);
+};
+
+const getTypeInscriptionByIdStudent = async (studentId) => {
+  try {
+    const typeInscription = await etudiantDao.getTypeInscriptionByIdStudent(studentId);
+    return typeInscription;
+  } catch (error) {
+    console.error("Error in service while fetching TypeInscription by Student ID:", error);
+    throw error;
+  }
+};
+
+
+
 module.exports = {
   getEtudiants,
   registerEtudiant,
   deleteEtudiant,
-  updateEtudiant
+  updateEtudiant,
+  getEtudiantById,
+  getTypeInscriptionByIdStudent
 };
