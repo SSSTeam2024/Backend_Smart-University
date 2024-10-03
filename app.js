@@ -13,6 +13,7 @@ app.use(cors({
 
 // app.use(express.static('files'));
 app.use('/files', express.static(path.join(__dirname, 'files')));
+
 app.use(express.json({limit: "50mb"}));
 app.use(express.urlencoded({limit: "50mb", extended: true, parameterLimit:50000}));
 const port = 5000;

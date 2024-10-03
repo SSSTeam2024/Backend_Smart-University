@@ -13,19 +13,19 @@ const addFicheVoeux = async (req, res) => {
   }
 };
 
-const updateSalleById = async (req, res) => {
+const updateFicheVoeuxById = async (req, res) => {
   try {
-    const salleId = req.params.id;
-    const { salle, emplacement, type_salle, departement } = req.body;
+    const ficheVoeuxId = req.body._id;
+    const { fiche_voeux_classes, jours, temps, classe,enseignant,semestre } = req.body;
 
-    const updatedSalle= await salleService.updateSalle(salleId, {
-        salle, emplacement, type_salle, departement
+    const updatedFicheVoeux= await ficheVoeuxService.updateFicheVoeux(ficheVoeuxId, {
+      fiche_voeux_classes, jours, temps, classe,enseignant,semestre
     });
 
-    if (!updatedSalle) {
-      return res.status(404).send("Salle not found!");
+    if (!updatedFicheVoeux) {
+      return res.status(404).send("Fiche Voeux not found!");
     }
-    res.json(updatedSalle);
+    res.json(updatedFicheVoeux);
   } catch (error) {
     console.error(error);
     res.status(500).send(error.message);
@@ -72,10 +72,11 @@ const deleteFicheVoeuxById = async (req, res) => {
     res.status(500).send(error.message);
   }
 };
-// 
+
 
 module.exports = {
   addFicheVoeux,
   getFichesVoeux,
-  deleteFicheVoeuxById
+  deleteFicheVoeuxById,
+  updateFicheVoeuxById
 };

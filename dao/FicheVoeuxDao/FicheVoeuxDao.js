@@ -16,8 +16,8 @@ const getFichesVoeux = async () => {
 }}).populate('enseignant');
 };
 
-const updateSalle = async (id, updateData) => {
-  return await salleModel.findByIdAndUpdate(id, updateData, { new: true });
+const updateFicheVoeux = async (id, updateData) => {
+  return await ficheVoeuxModel.findByIdAndUpdate(id, updateData, { new: true });
 };
 
 const deleteFicheVoeuxById = async (id) => {
@@ -33,5 +33,6 @@ const getSalleById = async (id) => {
 module.exports = {
   createficheVoeux,
   getFichesVoeux,
-  deleteFicheVoeuxById
+  deleteFicheVoeuxById,
+  updateFicheVoeux
 };

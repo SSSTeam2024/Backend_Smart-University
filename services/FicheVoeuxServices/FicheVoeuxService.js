@@ -9,8 +9,8 @@ const createficheVoeux = async (data) => {
   }
 };
 
-const updateSalle = async (id, updateData) => {
-  return await salleDao.updateSalle(id, updateData);
+const updateFicheVoeux = async (id, updateData) => {
+  return await ficheVoeuxDao.updateFicheVoeux(id, updateData);
 };
 
 const getSalleById = async (id) => {
@@ -32,5 +32,6 @@ const deleteFicheVoeuxById = async (id) => {
 module.exports = {
   createficheVoeux,
   getFichesVoeux,
-  deleteFicheVoeuxById
+  deleteFicheVoeuxById,
+  updateFicheVoeux
 };

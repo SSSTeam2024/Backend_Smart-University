@@ -54,6 +54,9 @@ const updatePersonnelDao = async (id, updateData) => {
 const getPersonnelDaoById = async (id) => {
   return await personnelDao.getPersonnelById(id);
 };
+
+
+
 module.exports = {
   registerPersonnelDao,
   getPersonnelsDao,

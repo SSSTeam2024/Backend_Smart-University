@@ -40,7 +40,17 @@ const ficheVoeuxRoutes=require("./FicheVoeuxRoutes/FicheVoeuxRoutes")
 
 const seanceRoutes=require("./SeanceRoutes/SeanceRoutes")
 
-const disponibiliteSalleRoutes=require("./DisponibiliteSalleRoutes/DisponibiliteSalleRoutes")
+const disponibiliteSalleRoutes=require("./DisponibiliteSalleRoutes/DisponibiliteSalleRoutes");
+
+const papierAdministratif =require("./PapierAdministratifRoutes/PapierAdministratifRoutes");
+
+const dossierAdministratif = require("./DossierAdministratifRoutes/DossierAdministratifRoutes")
+
+//papier administratif 
+router.use('/papierAdministratif',papierAdministratif);
+
+//dossier administratif 
+router.use('/dossierAdministratif',dossierAdministratif);
 
 //fiche voeux
 router.use('/fiche-voeux',ficheVoeuxRoutes);
