@@ -47,6 +47,7 @@ const getSalleById = async (req, res) => {
     res.status(500).send(error.message);
   }
 };
+
 const getFichesVoeux = async (req, res) => {
   try {
     const fichesVoeux = await ficheVoeuxService.getFichesVoeux();

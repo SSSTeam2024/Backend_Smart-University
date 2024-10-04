@@ -109,79 +109,6 @@ const getAllDossierAdmnistratifs = async (req, res) => {
   }
 };
 
-const removePaperFromDossier = async (req, res) => {
-  try {
-    const { dossierId, papierId, entityId, entityType } = req.params;
-
-    // Validate entityType (either 'personnel' or 'enseignant')
-    if (!["personnel", "enseignant"].includes(entityType)) {
-      return res.status(400).json({ message: "Invalid entity type" });
-    }
-
-    // Call the service to remove the paper from the dossier and entity
-    const updatedDossier =
-      await dossierAdministratifService.removePaperFromDossier(
-        dossierId,
-        papierId,
-        entityId,
-        entityType
-      );
-
-    res
-      .status(200)
-      .json({ message: "Paper removed successfully", dossier: updatedDossier });
-  } catch (error) {
-    console.error(
-      "Error in removePaperFromDossierAndEntity controller:",
-      error
-    );
-    res.status(500).json({ message: error.message });
-  }
-};
-
-// const updateDossierAdministratif = async (req, res) => {
-//   try {
-
-//     const DossierAdministratifId = req.body.dossierId;
-//     const { enseignant, personnel, papers } = req.body;
-
-//     const DossierFilesPath = "files/dossierFiles/";
-//     let documents = [];
-//     let updatedPapers = papers.map((paper) => {
-//       let { FileBase64String, FileExtension, file, ...restOfPaper } = paper;
-//       if (FileBase64String && FileExtension) {
-//         let file = globalFunctions.generateUniqueFilename(
-//           FileExtension,
-//           "Dossier"
-//         );
-//         documents.push({
-//           base64String: FileBase64String,
-//           extension: FileExtension,
-//           name: file,
-//           path: DossierFilesPath,
-//         });
-//         restOfPaper.file = file;
-//       }
-//       return restOfPaper;
-//     });
-//     let dossierBody = {
-//       enseignant,
-//       personnel,
-//       papers: updatedPapers,
-//     };
-//     console.log(documents);
-//     const dossier =
-//       await dossierAdministratifService.updateDossierAdministratif(
-//         DossierAdministratifId,
-//         dossierBody,
-//         documents
-//       );
-//     res.status(200).json(dossier);
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).send(error.message);
-//   }
-// };
 const updateDossierAdministratif = async (req, res) => {
   try {
     const DossierAdministratifId = req.body.dossierId;
@@ -228,9 +155,29 @@ const updateDossierAdministratif = async (req, res) => {
   }
 };
 
+const removeSpecificPaperFromDossier= async(req, res)=> {
+  const { dossierId, userId, userType, paperId, annee, remarques, file } = req.body;
+
+  try {
+      // Call the service function to remove the specific paper
+      const paperDetails = {
+          papier_administratif: paperId,
+          annee,
+          remarques,
+          file
+      };
+
+      const updatedDossier = await dossierAdministratifService.removeSpecificPaperFromDossierService(dossierId, userId, userType, paperDetails);
+
+      res.status(200).json({ success: true, message: 'Paper removed successfully', updatedDossier });
+  } catch (error) {
+      res.status(400).json({ success: false, message: error.message });
+  }
+}
+
 module.exports = {
   addDossierAdministratif,
   getAllDossierAdmnistratifs,
-  removePaperFromDossier,
+  removeSpecificPaperFromDossier,
   updateDossierAdministratif,
 };

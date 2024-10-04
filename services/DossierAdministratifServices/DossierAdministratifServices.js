@@ -52,23 +52,6 @@ async function saveAdministrativeFile(base64String, fileName, filePath) {
 }
 
 
-
-// const updateDossierAdministratif = async (id,updateData, documents) => {
-//   try {
-//     let saveResult = await saveDocumentToServer(documents);
-    
-//     if (saveResult) {
-//       const updatedDossierAdministratif = await dossierAdministratifDao.updateDossiersAdministratif(id,updateData);
-//       return updatedDossierAdministratif;
-//     } else {
-//       throw new Error('Failed to save documents.');
-//     }
-//   } catch (error) {
-//     console.error("Error updating Dossier Administratif:", error);
-//     throw error;
-//   }
-// };
-
 const updateDossierAdministratif = async (id, updateData, documents) => {
   try {
     // Save only new documents that are provided
@@ -87,15 +70,6 @@ const updateDossierAdministratif = async (id, updateData, documents) => {
   }
 };
 
-const removePaperFromDossier = async (dossierId, papierId, entityId, entityType) => {
-  try {
-    // Call DAO to remove the paper from the dossier and entity (personnel/enseignant)
-    const updatedDossier = await dossierAdministratifDao.removePaperFromDossier(dossierId, papierId, entityId, entityType);
-    return updatedDossier;
-  } catch (error) {
-    throw new Error(`Service Error: ${error.message}`);
-  }
-};
 const getDossierAdministratifsDao = async () => {
   try {
     return await dossierAdministratifDao.getDossiersAdministratifs();
@@ -104,9 +78,25 @@ const getDossierAdministratifsDao = async () => {
     throw error;
   }
 };
+
+const removeSpecificPaperFromDossierService=async (dossierId, userId, userType, paperDetails) =>{
+
+  if (userType !== 'enseignant' && userType !== 'personnel') {
+      throw new Error('Invalid user type');
+  }
+  const updatedDossier = await dossierAdministratifDao.removeSpecificPaperFromDossier(dossierId, userId, userType, paperDetails);
+
+  if (!updatedDossier) {
+      throw new Error('Dossier not found or unable to remove the specified paper');
+  }
+
+  return updatedDossier;
+}
+
+
 module.exports = {
   addDossierAdministratif,
   getDossierAdministratifsDao,
-  removePaperFromDossier,
+  removeSpecificPaperFromDossierService,
   updateDossierAdministratif
 };
