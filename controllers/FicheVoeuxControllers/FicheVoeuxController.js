@@ -2,10 +2,10 @@ const ficheVoeuxService = require("../../services/FicheVoeuxServices/FicheVoeuxS
 
 const addFicheVoeux = async (req, res) => {
   try {
-    const { fiche_voeux_classes, enseignant, semestre } = req.body;
+    const { fiche_voeux_classes, enseignant, semestre, jours } = req.body;
 
     const fiche = await ficheVoeuxService.createficheVoeux({
-      fiche_voeux_classes, enseignant, semestre
+      fiche_voeux_classes, enseignant, semestre, jours
     });
     res.json(fiche);
   } catch (error) {

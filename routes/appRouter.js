@@ -1,4 +1,4 @@
-const Router = require('express');
+const Router = require("express");
 const router = new Router();
 const etatPersonnelRoutes = require("./etatPersonnelRoutes/etatPersonnelRoutes");
 const postePersonnelRoutes = require("./postePersonnelRoutes/postePersonnelRoutes");
@@ -12,10 +12,8 @@ const posteEnseignantRoutes = require("./PosteEnseignantRoutes/PosteEnseignantRo
 const gradeEnseignantRoutes = require("./GradeEnseignantRoutes/GradeEnseignantRoutes");
 const specialiteEnseignantRoutes = require("./SpecialiteEnseignantRoutes/SpecialiteEnseignantRoute");
 
-
 const etatEtudiantRoutes = require("./EtatCompteEtudiantRoutes/EtatCompteEtudiantRoutes");
 const typeInscriptionEtudiantRoutes = require("./TypeInscriptionEtudiantRoutes/TypeInscriptionEtudiantRoutes");
-
 
 const departmentRoutes = require("./DepartementRoutes/DepartementRoutes");
 
@@ -23,87 +21,108 @@ const niveauClasseRoutes = require("./NiveauClasseRoutes/NiveauClasseRoutes");
 
 const sectionClasseRoutes = require("./SectionClasseRoutes/SectionClasseRoutes");
 
-
 const matiereRoutes = require("./MatiereRoutes/MatiereRoutes");
 
 const salleRoutes = require("./SalleRoutes/SalleRoutes");
 
 const classeRoutes = require("./ClasseRoutes/ClasseRoutes");
 
-const etudiantRoutes=require("./EtudiantRoutes/EtudiantRoutes")
+const etudiantRoutes = require("./EtudiantRoutes/EtudiantRoutes");
 
-const enseignantRoutes=require("./EnseignantRoutes/EnseignantRoutes")
+const enseignantRoutes = require("./EnseignantRoutes/EnseignantRoutes");
 
-const personnelRoutes=require("./PersonnelRoutes/PersonnelRoutes")
+const personnelRoutes = require("./PersonnelRoutes/PersonnelRoutes");
 
-const ficheVoeuxRoutes=require("./FicheVoeuxRoutes/FicheVoeuxRoutes")
+const ficheVoeuxRoutes = require("./FicheVoeuxRoutes/FicheVoeuxRoutes");
 
-const seanceRoutes=require("./SeanceRoutes/SeanceRoutes")
+const seanceRoutes = require("./SeanceRoutes/SeanceRoutes");
 
-const disponibiliteSalleRoutes=require("./DisponibiliteSalleRoutes/DisponibiliteSalleRoutes");
+const disponibiliteSalleRoutes = require("./DisponibiliteSalleRoutes/DisponibiliteSalleRoutes");
 
-const papierAdministratif =require("./PapierAdministratifRoutes/PapierAdministratifRoutes");
+const papierAdministratif = require("./PapierAdministratifRoutes/PapierAdministratifRoutes");
 
-const dossierAdministratif = require("./DossierAdministratifRoutes/DossierAdministratifRoutes")
+const dossierAdministratif = require("./DossierAdministratifRoutes/DossierAdministratifRoutes");
 
-//papier administratif 
-router.use('/papierAdministratif',papierAdministratif);
+const timeTableParams = require("./TimeTableParamsRoutes/TimeTableParamsRoutes");
 
-//dossier administratif 
-router.use('/dossierAdministratif',dossierAdministratif);
+const typeSeance = require("./TypeSeanceRoutes/TypeSeanceRoutes");
+
+const classPeriod = require("./ClassEmploiPeriodiqueRoutes/ClassEmploiPeriodiqueRoutes");
+const teacherPeriod = require("./TeacherPeriodRoutes/TeacherPeriodRoutes");
+
+const rattrapageRoutes = require("./RattrapageRoutes/RattrapageRoutes");
+
+//rattrapage
+router.use("/rattrapage", rattrapageRoutes);
+
+//class period
+router.use("/class-period", classPeriod);
+
+//teacher period
+router.use("/teacher-period", teacherPeriod);
+
+//typeSeance
+router.use("/type-seance", typeSeance);
+
+//Time Table Params
+router.use("/timeTableParams", timeTableParams);
+
+//papier administratif
+router.use("/papierAdministratif", papierAdministratif);
+
+//dossier administratif
+router.use("/dossierAdministratif", dossierAdministratif);
 
 //fiche voeux
-router.use('/fiche-voeux',ficheVoeuxRoutes);
+router.use("/fiche-voeux", ficheVoeuxRoutes);
 
 //Seance
-router.use('/seance',seanceRoutes);
+router.use("/seance", seanceRoutes);
 
 //disponibilite
-router.use('/disponibilite-salle',disponibiliteSalleRoutes);
+router.use("/disponibilite-salle", disponibiliteSalleRoutes);
 
 // parametre compte personnel
-router.use('/etat-personnel',etatPersonnelRoutes);
-router.use('/poste-personnel',postePersonnelRoutes);
-router.use('/grade-personnel',gradePersonnelRoutes);
-router.use('/categorie-personnel',categoriePersonnelRoutes);
-router.use('/service-personnel',servicePersonnelRoutes);
+router.use("/etat-personnel", etatPersonnelRoutes);
+router.use("/poste-personnel", postePersonnelRoutes);
+router.use("/grade-personnel", gradePersonnelRoutes);
+router.use("/categorie-personnel", categoriePersonnelRoutes);
+router.use("/service-personnel", servicePersonnelRoutes);
 router.use("/user", userRoutes);
+
 // parametre compte enseignant
-router.use('/etat-enseignant',etatEnseignantRoutes);
-router.use('/poste-enseignant',posteEnseignantRoutes);
-router.use('/grade-enseignant',gradeEnseignantRoutes);
-router.use('/specialite-enseignant',specialiteEnseignantRoutes);
+router.use("/etat-enseignant", etatEnseignantRoutes);
+router.use("/poste-enseignant", posteEnseignantRoutes);
+router.use("/grade-enseignant", gradeEnseignantRoutes);
+router.use("/specialite-enseignant", specialiteEnseignantRoutes);
 
 // parametre compte etudiant
-router.use('/etat-etudiant',etatEtudiantRoutes);
-router.use('/type-inscription-etudiant',typeInscriptionEtudiantRoutes);
+router.use("/etat-etudiant", etatEtudiantRoutes);
+router.use("/type-inscription-etudiant", typeInscriptionEtudiantRoutes);
 router.use("/etudiant", etudiantRoutes);
 
 //enseignant
-router.use('/enseignant',enseignantRoutes);
-// personnel 
-router.use('/personnel',personnelRoutes);
+router.use("/enseignant", enseignantRoutes);
 
+// personnel
+router.use("/personnel", personnelRoutes);
 
 // departement
 router.use("/department", departmentRoutes);
 
 //niveau classe
-
 router.use("/niveau-classe", niveauClasseRoutes);
-// section classe
 
+// section classe
 router.use("/section-classe", sectionClasseRoutes);
 
 //matiere
-
 router.use("/matiere", matiereRoutes);
+
 //Salle
 router.use("/salle", salleRoutes);
 
 //Classe
 router.use("/classe", classeRoutes);
-
-
 
 module.exports = router;

@@ -1,21 +1,21 @@
-const enseignantModel = require("../../models/EnseignantModel/EnseignantModel")
-const PapierAdministratif =require("../../models/PapierAdministratif/PapierAdministratif")
-const mongoose = require('mongoose');
+const enseignantModel = require("../../models/EnseignantModel/EnseignantModel");
+const PapierAdministratif = require("../../models/PapierAdministratif/PapierAdministratif");
+const teacherPeriodModel = require("../../models/TeacherPeriodModel/TeacherPeriodModel");
+const mongoose = require("mongoose");
 
 const createEnseignant = async (enseignant) => {
   return await enseignantModel.create(enseignant);
 };
 
 const getEnseignants = async () => {
-  return await enseignantModel.find()
-    .populate('etat_compte')
-    .populate('specilaite').
-    populate("grade")
-    .populate('poste')
-    .populate("departements").
-    populate("papers");
+  return await enseignantModel
+    .find()
+    .populate("etat_compte")
+    .populate("specilaite")
+    .populate("grade")
+    .populate("poste")
+    .populate("departements");
 };
-
 
 const updateEnseignant = async (id, updateData) => {
   return await enseignantModel.findByIdAndUpdate(id, updateData, { new: true });
@@ -27,10 +27,11 @@ const deleteEnseignant = async (id) => {
 
 const getEnseignantById = async (id) => {
   return await enseignantModel
-  .populate('specilaite').
-  populate("grade")
-  .populate('poste')
-  .populate("departements");
+    .findById(id)
+    .populate("specilaite")
+    .populate("grade")
+    .populate("poste")
+    .populate("departements");
 };
 
 // DAO: Handle multiple papier_administratif IDs from different parent documents
@@ -120,7 +121,7 @@ const assignPapierToTeacher = async (paperData, teacherId) => {
       throw new Error("Invalid input: Teacher ID or paper data");
     }
 
-    const paperIds = paperData.map(paper => {
+    const paperIds = paperData.map((paper) => {
       if (!paper.papier_administratif) {
         throw new Error("Invalid papier_administratif ID");
       }
@@ -128,18 +129,22 @@ const assignPapierToTeacher = async (paperData, teacherId) => {
     });
 
     const papiers = await PapierAdministratif.find({
-      '_id': { $in: paperIds }
+      _id: { $in: paperIds },
     });
 
     if (papiers.length === 0) {
-      throw new Error("No Papier Administratif documents found for the provided IDs");
+      throw new Error(
+        "No Papier Administratif documents found for the provided IDs"
+      );
     }
 
-    const updatedTeacher = await enseignantModel.findByIdAndUpdate(
-      teacherId,
-      { $addToSet: { papers: { $each: paperData } } },
-      { new: true }
-    ).populate("papers.files_papier_administratif");
+    const updatedTeacher = await enseignantModel
+      .findByIdAndUpdate(
+        teacherId,
+        { $addToSet: { papers: { $each: paperData } } },
+        { new: true }
+      )
+      .populate("papers.files_papier_administratif");
 
     return updatedTeacher;
   } catch (error) {
@@ -147,22 +152,27 @@ const assignPapierToTeacher = async (paperData, teacherId) => {
   }
 };
 
+const fetchAllTeachersPeriods = async () => {
+  try {
+    const teachersPeriods = await teacherPeriodModel
+      .find()
+      .populate("id_teacher")
+      .populate("id_classe_period");
 
-
-
-
-
-
-
-
-
+    return teachersPeriods;
+  } catch (error) {
+    throw new Error(
+      "Error fetching teachers' periods from database: " + error.message
+    );
+  }
+};
 
 module.exports = {
- 
-    createEnseignant,
-    getEnseignants,
-    updateEnseignant,
-    deleteEnseignant,
-    getEnseignantById,
-    assignPapierToTeacher
+  createEnseignant,
+  getEnseignants,
+  updateEnseignant,
+  deleteEnseignant,
+  getEnseignantById,
+  assignPapierToTeacher,
+  fetchAllTeachersPeriods,
 };

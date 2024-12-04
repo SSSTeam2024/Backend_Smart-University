@@ -12,8 +12,9 @@ const createSeance = async (req, res) => {
       heure_debut,
       semestre,
       type_seance,
+      emploiPeriodique_id,
     } = req.body;
- console.log(req.body);
+    console.log(req.body);
     const seanceJson = await seanceService.createSeance({
       jour,
       matiere,
@@ -24,6 +25,7 @@ const createSeance = async (req, res) => {
       heure_debut,
       type_seance,
       semestre,
+      emploiPeriodique_id,
     });
     res.json(seanceJson);
   } catch (error) {
@@ -86,9 +88,13 @@ const getSeanceById = async (req, res) => {
 
 const getSeancesByIdTeacher = async (req, res) => {
   try {
-    const { teacher_id, jour, semestre } = req.body;
+    const { teacher_id, jour, emplois_periodiques_ids } = req.body;
 
-    const seances = await seanceService.getSeancesByIdTeacher(teacher_id, jour, semestre);
+    const seances = await seanceService.getSeancesByIdTeacher(
+      teacher_id,
+      jour,
+      emplois_periodiques_ids
+    );
 
     if (!seances) {
       return res.status(404).send("Pas de séances");
@@ -126,11 +132,16 @@ const getAllSeances = async (req, res) => {
   }
 };
 
-const getAllSeancesByIdClasse = async (req, res) => {
+const getAllSeancesByIdEmploi = async (req, res) => {
   try {
-    const idClasse =req.params.id
-    const seances = await seanceService.getAllSeancesByIdClasse(idClasse);
-    res.json(seances);
+    const idEmploi = req.params.id;
+    if (idEmploi === undefined || idEmploi === null || idEmploi === "") {
+      const error = { message: "Invalid session id" };
+      res.json(error);
+    } else {
+      const seances = await seanceService.getAllSeancesByIdEmploi(idEmploi);
+      res.json(seances);
+    }
   } catch (error) {
     console.error(error);
     res.status(500).send(error.message);
@@ -139,12 +150,9 @@ const getAllSeancesByIdClasse = async (req, res) => {
 
 const deleteSeanceById = async (req, res) => {
   try {
-    const seanceId = req.params.id;
-    const { roomId, startTime, endTime, day } = req.body;
-    console.log(seanceId);
-    console.log(req.body);
+    const seance = req.body;
 
-    const deletedSeance = await seanceService.deleteSeance(seanceId, { roomId, startTime, endTime, day });
+    const deletedSeance = await seanceService.deleteSeance(seance);
 
     if (!deletedSeance) {
       return res.status(404).send("Seance not found");
@@ -158,7 +166,21 @@ const deleteSeanceById = async (req, res) => {
     res.status(500).send(error.message);
   }
 };
-//
+
+const fetchSeancesByIdTeacherAndSemestre = async (req, res) => {
+  try {
+    const { enseignantId, semestre } = req.params;
+
+    const seances = await seanceService.getSeancesByIdTeacherAndSemestre(
+      enseignantId,
+      semestre
+    );
+    return res.status(200).json(seances);
+  } catch (error) {
+    console.error("Error fetching seances:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
 
 module.exports = {
   deleteSeanceById,
@@ -166,7 +188,8 @@ module.exports = {
   getSeanceById,
   updateSeanceById,
   createSeance,
-  getAllSeancesByIdClasse,
+  getAllSeancesByIdEmploi,
   getSeancesByIdTeacher,
-  getSessionsByRoomId
+  getSessionsByRoomId,
+  fetchSeancesByIdTeacherAndSemestre,
 };

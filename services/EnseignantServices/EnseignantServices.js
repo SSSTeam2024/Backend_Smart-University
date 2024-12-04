@@ -53,12 +53,11 @@ const getEnseignantDaoById = async (id) => {
   return await enseignantDao.getEnseignantById(id);
 };
 
-
 const assignPapierToTeacher = async (enseignantId, papierIds) => {
   try {
     const enseignant = await Enseignant.findById(enseignantId);
     if (!enseignant) {
-      throw new Error('Enseignant not found');
+      throw new Error("Enseignant not found");
     }
     for (const paperId of papierIds) {
       enseignant.papers.push(paperId);
@@ -67,13 +66,20 @@ const assignPapierToTeacher = async (enseignantId, papierIds) => {
     await enseignant.save();
     return enseignant;
   } catch (error) {
-    console.error('Error in assignPapierToTeacher:', error);
+    console.error("Error in assignPapierToTeacher:", error);
     throw new Error(`Service Error: DAO Error: ${error.message}`);
   }
 };
 
+const fetchAllTeachersPeriods = async () => {
+  try {
+    const teachersPeriods = await enseignantDao.fetchAllTeachersPeriods();
 
-
+    return teachersPeriods;
+  } catch (error) {
+    throw new Error("Error processing teachers' periods: " + error.message);
+  }
+};
 module.exports = {
   registerEnseignantDao,
   getEnseignatsDao,
@@ -81,4 +87,5 @@ module.exports = {
   updateEnseignantDao,
   getEnseignantDaoById,
   assignPapierToTeacher,
+  fetchAllTeachersPeriods,
 };

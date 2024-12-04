@@ -1,7 +1,7 @@
 const enseignantService = require("../../services/EnseignantServices/EnseignantServices");
 const Enseignant = require("../../models/EnseignantModel/EnseignantModel");
 const globalFunctions = require("../../utils/globalFunctions");
-const path = require('path');
+const path = require("path");
 const fs = require("fs");
 
 const addEnseignant = async (req, res) => {
@@ -50,11 +50,17 @@ const addEnseignant = async (req, res) => {
       annee_certif3,
       certif3,
       PhotoProfilFileExtension,
-      PhotoProfilFileBase64String
+      PhotoProfilFileBase64String,
     } = req.body;
 
     const PhotoProfilPath = "files/enseignantFiles/PhotoProfil/";
-    const PhotoProfilFilePath = path.join(PhotoProfilPath, globalFunctions.generateUniqueFilename(PhotoProfilFileExtension, "photo_profil"));
+    const PhotoProfilFilePath = path.join(
+      PhotoProfilPath,
+      globalFunctions.generateUniqueFilename(
+        PhotoProfilFileExtension,
+        "photo_profil"
+      )
+    );
 
     let documents = [
       {
@@ -62,54 +68,57 @@ const addEnseignant = async (req, res) => {
         extension: PhotoProfilFileExtension,
         name: path.basename(PhotoProfilFilePath),
         path: PhotoProfilPath,
-      }
+      },
     ];
 
-    const enseignant = await enseignantService.registerEnseignantDao({
-      nom_fr,
-      nom_ar,
-      prenom_fr,
-      prenom_ar,
-      lieu_naissance_fr,
-      lieu_naissance_ar,
-      date_naissance,
-      nationalite,
-      etat_civil,
-      sexe,
-      matricule,
-      mat_cnrps,
-      etat_compte,
-      poste,
-      grade,
-      specilaite,
-      date_affectation,
-      compte_courant,
-      identifinat_unique,
-      num_cin,
-      date_delivrance,
-      state,
-      dependence,
-      code_postale,
-      departements,
-      adress_ar,
-      adress_fr,
-      num_phone1,
-      num_phone2,
-      email,
-      nom_conjoint,
-      job_conjoint,
-      nombre_fils,
-      entreprise1,
-      annee_certif1,
-      certif1,
-      entreprise2,
-      annee_certif2,
-      certif2,
-      entreprise3,
-      annee_certif3,
-      certif3,
-      photo_profil: path.basename(PhotoProfilFilePath)
-    }, documents);
+    const enseignant = await enseignantService.registerEnseignantDao(
+      {
+        nom_fr,
+        nom_ar,
+        prenom_fr,
+        prenom_ar,
+        lieu_naissance_fr,
+        lieu_naissance_ar,
+        date_naissance,
+        nationalite,
+        etat_civil,
+        sexe,
+        matricule,
+        mat_cnrps,
+        etat_compte,
+        poste,
+        grade,
+        specilaite,
+        date_affectation,
+        compte_courant,
+        identifinat_unique,
+        num_cin,
+        date_delivrance,
+        state,
+        dependence,
+        code_postale,
+        departements,
+        adress_ar,
+        adress_fr,
+        num_phone1,
+        num_phone2,
+        email,
+        nom_conjoint,
+        job_conjoint,
+        nombre_fils,
+        entreprise1,
+        annee_certif1,
+        certif1,
+        entreprise2,
+        annee_certif2,
+        certif2,
+        entreprise3,
+        annee_certif3,
+        certif3,
+        photo_profil: path.basename(PhotoProfilFilePath),
+      },
+      documents
+    );
 
     const populatedEnseignant = await Enseignant.findById(enseignant._id)
       .populate("etat_compte")
@@ -124,7 +133,6 @@ const addEnseignant = async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 };
-
 
 const getEnseignants = async (req, res) => {
   try {
@@ -297,17 +305,22 @@ const getEnseignants = async (req, res) => {
 //   }
 // };
 
-
-
 // controllers/enseignantController.js
 
 const updateEnseignantById = async (req, res) => {
-  const requestId = new Date().toISOString() + Math.random().toString(36).substring(2, 15); // Unique request identifier
+  const requestId =
+    new Date().toISOString() + Math.random().toString(36).substring(2, 15); // Unique request identifier
   try {
-    console.log(`[${requestId}] Received request to update enseignant with ID:`, req.body.id);
+    console.log(
+      `[${requestId}] Received request to update enseignant with ID:`,
+      req.body.id
+    );
 
     const enseignantId = req.body._id; // Correctly use the personnel ID from the request body
-    console.log(`[${requestId}] Received request to update enseignant with ID:`, enseignantId);
+    console.log(
+      `[${requestId}] Received request to update enseignant with ID:`,
+      enseignantId
+    );
 
     // Validate if ID is provided
     if (!enseignantId) {
@@ -369,7 +382,9 @@ const updateEnseignantById = async (req, res) => {
         console.log(`[${requestId}] File extension is missing for ${name}.`);
         throw new Error(`File extension is missing for ${name}.`);
       }
-      return `${Date.now()}_${Math.random().toString(36).substring(2, 15)}_${name}.${extension}`;
+      return `${Date.now()}_${Math.random()
+        .toString(36)
+        .substring(2, 15)}_${name}.${extension}`;
     };
 
     // Helper function to save files
@@ -387,7 +402,10 @@ const updateEnseignantById = async (req, res) => {
     // Prepare documents array
     const documents = [];
     if (PhotoProfilFileBase64String && PhotoProfilFileExtension) {
-      const photoProfilName = generateUniqueFilename(PhotoProfilFileExtension, "photo_profil");
+      const photoProfilName = generateUniqueFilename(
+        PhotoProfilFileExtension,
+        "photo_profil"
+      );
       saveFile(PhotoProfilFileBase64String, photoProfilPath, photoProfilName);
       documents.push({ name: photoProfilName });
     }
@@ -450,7 +468,10 @@ const updateEnseignantById = async (req, res) => {
     };
 
     // Call the service to update personnel
-    const updatedEnseignant = await enseignantService.updateEnseignantDao(enseignantId, updateFields);
+    const updatedEnseignant = await enseignantService.updateEnseignantDao(
+      enseignantId,
+      updateFields
+    );
 
     if (!updatedEnseignant) {
       return res.status(404).send("Enseignant not found!");
@@ -502,15 +523,30 @@ const assignPapierToTeacher = async (req, res) => {
   const { enseignantId } = req.params;
   const { papier_administratif } = req.body;
   try {
-    const enseignant = await enseignantService.assignPapierToTeacher(enseignantId, papier_administratif);
+    const enseignant = await enseignantService.assignPapierToTeacher(
+      enseignantId,
+      papier_administratif
+    );
     return res.status(200).json({ success: true, data: enseignant });
   } catch (error) {
-    console.error('Error in assignPapierToTeacher controller:', error.message);
+    console.error("Error in assignPapierToTeacher controller:", error.message);
     return res.status(500).json({ success: false, message: error.message });
   }
 };
 
+const fetchAllTeachersPeriods = async (req, res) => {
+  try {
+    const teachersPeriods = await enseignantService.fetchAllTeachersPeriods();
 
+    res.json(teachersPeriods);
+  } catch (error) {
+    console.error("Error in controller:", error.message);
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch teachers' periods.",
+    });
+  }
+};
 
 module.exports = {
   addEnseignant,
@@ -518,6 +554,6 @@ module.exports = {
   deleteEnseignantById,
   getEnseignantById,
   updateEnseignantById,
-  assignPapierToTeacher
-
+  assignPapierToTeacher,
+  fetchAllTeachersPeriods,
 };

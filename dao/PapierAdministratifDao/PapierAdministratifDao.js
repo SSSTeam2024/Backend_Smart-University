@@ -1,7 +1,5 @@
 const PapierAdministratif = require('../../models/PapierAdministratif/PapierAdministratif');
-const Enseignant = require('../../models/EnseignantModel/EnseignantModel');
-const Personnel = require('../../models/PersonnelModel/PersonnelModel');
-const Category = require('../../models/categoryModel/categoryModel');
+
 
 const addPapierAdministratif = async (papier_administratif) => {
   try {
@@ -13,15 +11,13 @@ const addPapierAdministratif = async (papier_administratif) => {
 };
 
 
-
-
 const getPapierAdministratifs = async () => {
   const result = await PapierAdministratif.find();
   return result;
 };
 
 
-const updatePapierAdministratif = async (id, updateData) => {
+const  updatePapierAdministratif = async (id, updateData) => {
   return await PapierAdministratif.findByIdAndUpdate(id, updateData, { new: true });
 };
 

@@ -157,9 +157,10 @@ const updateDossierAdministratif = async (req, res) => {
 
 const removeSpecificPaperFromDossier= async(req, res)=> {
   const { dossierId, userId, userType, paperId, annee, remarques, file } = req.body;
+  console.log("Request Body:", req.body); 
+  console.log("Dossier ID:", dossierId);
 
   try {
-      // Call the service function to remove the specific paper
       const paperDetails = {
           papier_administratif: paperId,
           annee,
@@ -175,9 +176,57 @@ const removeSpecificPaperFromDossier= async(req, res)=> {
   }
 }
 
+const archiveDossierAdministratif = async (req, res) => {
+  try {
+    const { dossierId } = req.body;
+
+    const { archivedDossier, type } = await dossierAdministratifService.archiveDossierAdministratif(dossierId);
+
+    if (archivedDossier) {
+      return res.status(200).json({
+        success: true,
+        message: `Dossier archived successfully for ${type}`,
+        dossier: archivedDossier,
+        type, // Return the type of dossier archived (enseignant or personnel)
+      });
+    } else {
+      return res.status(404).json({ success: false, message: 'Dossier not found' });
+    }
+  } catch (error) {
+    console.error("Error archiving dossier:", error);
+    res.status(500).json({ success: false, message: 'Internal server error' });
+  }
+};
+
+const restoreDossierAdministratifController = async (req, res) => {
+  const { dossierId } = req.body;
+
+  if (!dossierId) {
+    return res.status(400).json({ message: 'Dossier ID is required' });
+  }
+
+  try {
+    const restoredDossier = await dossierAdministratifService.restoreDossierAdministratifService(dossierId);
+    if (!restoredDossier) {
+      return res.status(404).json({ message: 'Dossier not found' });
+    }
+    return res.status(200).json({
+      message: 'Dossier restored successfully',
+      dossier: restoredDossier,
+    });
+  } catch (error) {
+    console.error("Error in controller restoring dossier:", error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+
 module.exports = {
   addDossierAdministratif,
   getAllDossierAdmnistratifs,
   removeSpecificPaperFromDossier,
   updateDossierAdministratif,
+  archiveDossierAdministratif,
+  restoreDossierAdministratifController
+
 };
