@@ -51,6 +51,11 @@ const classPeriod = require("./ClassEmploiPeriodiqueRoutes/ClassEmploiPeriodique
 const teacherPeriod = require("./TeacherPeriodRoutes/TeacherPeriodRoutes");
 
 const rattrapageRoutes = require("./RattrapageRoutes/RattrapageRoutes");
+const variableGlobaleRoutes = require("./VariableGlobaleRoutes/variableGlobaleRoutes");
+
+// variable globale
+
+router.use("/variable-globale", variableGlobaleRoutes);
 
 //rattrapage
 router.use("/rattrapage", rattrapageRoutes);

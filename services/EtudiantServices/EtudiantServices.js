@@ -1,18 +1,47 @@
 const etudiantDao = require("../../dao/StudentDao/StudentDao");
+const bcrypt = require("bcryptjs");
 const fs = require("fs");
 const path = require("path");
 const globalFunctions = require("../../utils/globalFunctions");
 
+// const registerEtudiant = async (userData, documents) => {
+//   try {
+//     console.log("documents", documents);
+//     const saveResult = await saveDocumentToServer(documents);
+
+//     if (saveResult) {
+//       const newEtudiant = await etudiantDao.createEudiant(userData);
+//       return newEtudiant;
+//     } else {
+//       throw new Error("Failed to save documents.");
+//     }
+//   } catch (error) {
+//     console.error("Error registering etudiant:", error);
+//     throw error;
+//   }
+// };
+
 const registerEtudiant = async (userData, documents) => {
   try {
     console.log("documents", documents);
+
+    // Save documents to server
     const saveResult = await saveDocumentToServer(documents);
-    if (saveResult) {
-      const newEtudiant = await etudiantDao.createEudiant(userData);
-      return newEtudiant;
-    } else {
+
+    if (!saveResult) {
       throw new Error("Failed to save documents.");
     }
+
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(userData.password, 10);
+
+    // Create the Etudiant with hashed password
+    const newEtudiant = await etudiantDao.createEudiant({
+      ...userData,
+      password: hashedPassword,
+    });
+
+    return newEtudiant;
   } catch (error) {
     console.error("Error registering etudiant:", error);
     throw error;
@@ -53,7 +82,6 @@ const deleteEtudiant = async (id) => {
   return await etudiantDao.deleteEtudiant(id);
 };
 
-
 const updateEtudiant = async (id, updateData) => {
   return await etudiantDao.updateEtudiant(id, updateData);
 };
@@ -64,15 +92,18 @@ const getEtudiantById = async (id) => {
 
 const getTypeInscriptionByIdStudent = async (studentId) => {
   try {
-    const typeInscription = await etudiantDao.getTypeInscriptionByIdStudent(studentId);
+    const typeInscription = await etudiantDao.getTypeInscriptionByIdStudent(
+      studentId
+    );
     return typeInscription;
   } catch (error) {
-    console.error("Error in service while fetching TypeInscription by Student ID:", error);
+    console.error(
+      "Error in service while fetching TypeInscription by Student ID:",
+      error
+    );
     throw error;
   }
 };
-
-
 
 module.exports = {
   getEtudiants,
@@ -80,5 +111,5 @@ module.exports = {
   deleteEtudiant,
   updateEtudiant,
   getEtudiantById,
-  getTypeInscriptionByIdStudent
+  getTypeInscriptionByIdStudent,
 };
