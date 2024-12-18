@@ -56,6 +56,18 @@ const getSeancesByIdTeacher = async (
   return seances;
 };
 
+const getPeriodicSessionsByTeacher = async (
+  teacherId,
+  emplois_periodiques_ids
+) => {
+  let seances = [];
+  for (const id of emplois_periodiques_ids) {
+    const result = await seanceDao.getPeriodicSessionsByTeacher(teacherId, id);
+    seances = seances.concat(result);
+  }
+  return seances;
+};
+
 // Séances des emplois periodiques (En Elaboration)
 const getSeancesByTeacher = async (teacherId, semestre) => {
   let seances = await seanceDao.getSeancesByTeacher(teacherId, semestre);
@@ -142,4 +154,5 @@ module.exports = {
   getSessionsByRoomId,
   getSeancesByTeacher,
   getSeancesByIdTeacherAndSemestre,
+  getPeriodicSessionsByTeacher,
 };
