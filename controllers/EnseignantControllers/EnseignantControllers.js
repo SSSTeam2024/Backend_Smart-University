@@ -548,6 +548,16 @@ const fetchAllTeachersPeriods = async (req, res) => {
   }
 };
 
+const getTeachersGroupedByGrade = async (req, res) => {
+  try {
+    const enseignants = await enseignantService.getTeachersGroupedByGrade();
+    res.json(enseignants);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send(error.message);
+  }
+};
+
 module.exports = {
   addEnseignant,
   getEnseignants,
@@ -556,4 +566,5 @@ module.exports = {
   updateEnseignantById,
   assignPapierToTeacher,
   fetchAllTeachersPeriods,
+  getTeachersGroupedByGrade,
 };

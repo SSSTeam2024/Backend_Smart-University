@@ -80,6 +80,12 @@ const fetchAllTeachersPeriods = async () => {
     throw new Error("Error processing teachers' periods: " + error.message);
   }
 };
+
+const getTeachersGroupedByGrade = async () => {
+  const result = await enseignantDao.getTeachersGroupedByGrade();
+  return result;
+};
+
 module.exports = {
   registerEnseignantDao,
   getEnseignatsDao,
@@ -88,4 +94,5 @@ module.exports = {
   getEnseignantDaoById,
   assignPapierToTeacher,
   fetchAllTeachersPeriods,
+  getTeachersGroupedByGrade,
 };
